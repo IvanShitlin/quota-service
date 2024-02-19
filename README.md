@@ -6,7 +6,8 @@ The application is built using Java 21. The application uses a MySQL and Elastic
 The current implementation uses a `ConcurrentHashMap` to store the quota information for each userEntity. The key of the map is the userEntity ID and the value is the number of requests made by the userEntity. The maximum number of requests per userEntity is defined by the constant `MAX_REQUESTS_PER_USER`.
 
 ## Usage
-
+To run the application, follow these steps:
+- clone the repository to your local machine
 - run mySql database on port `3306` with db `quota-db`, username `user` and password `password`
 - run ElasticSearch on port `9200` with username `elastic` and password `6361`
 - run the application
