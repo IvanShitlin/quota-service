@@ -1,9 +1,6 @@
 # Getting Started
-
-# LocalMapQuotaManagementService
-
-The `LocalMapQuotaManagementService` class is an implementation of the `QuotaManagementService` interface. It uses a local concurrent hash map to manage userEntity quotas.
-
+This is a simple Spring Boot application that provides a RESTful API for managing user and simple quota mechanism.
+The application is built using Java 21. The application uses a MySQL and ElasticSearch  to store user information.
 ## Current Implementation
 
 The current implementation uses a `ConcurrentHashMap` to store the quota information for each userEntity. The key of the map is the userEntity ID and the value is the number of requests made by the userEntity. The maximum number of requests per userEntity is defined by the constant `MAX_REQUESTS_PER_USER`.
