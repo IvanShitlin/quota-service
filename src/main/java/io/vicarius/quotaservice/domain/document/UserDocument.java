@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
-public class User {
+public class UserDocument {
 
     @Id
     private String id;
@@ -21,5 +21,5 @@ public class User {
 
     private String lastName;
 
-    private LocalDateTime lastLoginTimeUtc;
+    private Long lastLoginTimeUtc;
 }

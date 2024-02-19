@@ -1,2 +1,7 @@
-package io.vicarius.quotaservice.exception;public class QuotaExceededException {
+package io.vicarius.quotaservice.exception;
+
+public class QuotaExceededException extends RuntimeException {
+    public QuotaExceededException(String message) {
+        super(message);
+    }
 }

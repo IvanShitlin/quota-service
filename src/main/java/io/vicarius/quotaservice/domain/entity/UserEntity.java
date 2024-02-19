@@ -1,4 +1,4 @@
-package io.vicarius.quotaservice.domain;
+package io.vicarius.quotaservice.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
-public class User {
+public class UserEntity {
 
     @Id
     private String id;

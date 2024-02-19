@@ -1,11 +1,12 @@
 package io.vicarius.quotaservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.vicarius.quotaservice.QuotaServiceApplication;
 import io.vicarius.quotaservice.domain.document.UserDocument;
 import io.vicarius.quotaservice.domain.entity.UserEntity;
+import io.vicarius.quotaservice.dto.User;
 import io.vicarius.quotaservice.repository.UserElasticSearchRepository;
 import io.vicarius.quotaservice.repository.UserJpaRepository;
+import io.vicarius.quotaservice.service.UserRepositoryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,11 +24,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserEntityControllerTest {
+public class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -38,40 +40,57 @@ public class UserEntityControllerTest {
     @MockBean
     private UserElasticSearchRepository userElasticSearchRepository;
 
+    @MockBean
+    private UserRepositoryService userRepositoryService;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Test
     void testGetUser() throws Exception {
-        when(userJpaRepository.findById("1")).thenReturn(Optional.of(new UserEntity("1", "John", "Doe", LocalDateTime.now())));
-        when(userElasticSearchRepository.findById("1")).thenReturn(Optional.of(UserDocument.builder().id("1").firstName("John").lastName("Doe").lastLoginTimeUtc(1L).build()));
+        when(userRepositoryService.getUser("1")).thenReturn(new User("1", "John", "Doe", null));
+
         mockMvc.perform(get("/users/1"))
                 .andExpect(status().isOk());
-        verify(userJpaRepository).findById("1");
+
+        verify(userRepositoryService).getUser("1");
     }
 
     @Test
     void testCreateUser() throws Exception {
-        UserEntity user = new UserEntity("2", "John", "Doe", null);
-        mockMvc.perform(post("/user")
+        var user = new User("1", "John", "Doe", null);
+        when(userRepositoryService.createUser(user)).thenReturn(user);
+
+        mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isOk());
+
+        verify(userRepositoryService).createUser(user);
     }
 
     @Test
     void testUpdateUser() throws Exception {
-        UserEntity user = new UserEntity("1", "John", "Doe", null);
-        mockMvc.perform(put("/user/1")
+        var user = new User("1", "John", "Doe", null);
+        var updatedUser = new User("1", "John", "Doe Jr.", null);
+        when(userRepositoryService.getUser("1")).thenReturn(user);
+        when(userRepositoryService.createUser(user)).thenReturn(user);
+
+        mockMvc.perform(put("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(user)))
-                .andExpect(status().isOk());
+                        .content(objectMapper.writeValueAsString(updatedUser)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.lastName").value("Doe Jr."));
+
+        verify(userRepositoryService).getUser("1");
+        verify(userRepositoryService).createUser(updatedUser);
     }
 
     @Test
     void testDeleteUser() throws Exception {
-        mockMvc.perform(delete("/user/1"))
-                .andExpect(status().isOk());
+        mockMvc.perform(delete("/users/1"))
+                .andExpect(status().isNoContent());
+
+        verify(userRepositoryService).deleteUser("1");
     }
 }

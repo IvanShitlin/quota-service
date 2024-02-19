@@ -1,4 +1,4 @@
-package io.vicarius.quotaservice.service;
+package io.vicarius.quotaservice.mapper;
 
 import io.vicarius.quotaservice.domain.document.UserDocument;
 import io.vicarius.quotaservice.domain.entity.UserEntity;

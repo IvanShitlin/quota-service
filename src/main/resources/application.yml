@@ -1,1 +1,19 @@
-sql
+spring:
+  datasource:
+    url: "jdbc:mysql://localhost:3306/quota-db"
+    username: user
+    password: password
+  elasticsearch:
+    uris: http://localhost:9200
+    username: elastic
+    password: 6361
+    socket-timeout: 60000
+    socket-keep-alive: true
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  sql:
+    init:
+      platform: MYSQL
