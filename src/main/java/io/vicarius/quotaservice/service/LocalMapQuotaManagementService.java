@@ -2,6 +2,7 @@ package io.vicarius.quotaservice.service;
 
 import io.vicarius.quotaservice.dto.UserQuota;
 import io.vicarius.quotaservice.exception.QuotaExceededException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,14 +16,15 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class LocalMapQuotaManagementService implements QuotaManagementService {
 
-    private static final int MAX_REQUESTS_PER_USER = 5;
+    @Value("${max-requests-per-user}")
+    private int maxRequestsPerUser;
 
     private final Map<String, Integer> requestCountMap = new ConcurrentHashMap<>();
 
     @Override
     public void consumeQuotaForUser(String userId) {
         int requestCount = requestCountMap.getOrDefault(userId, 0);
-        if (requestCount >= MAX_REQUESTS_PER_USER) {
+        if (requestCount >= maxRequestsPerUser) {
             throw new QuotaExceededException("User has exceeded the maximum number of requests");
         } else {
             requestCountMap.put(userId, requestCount + 1);
@@ -34,7 +36,7 @@ public class LocalMapQuotaManagementService implements QuotaManagementService {
         return userIds.stream()
                 .map(userId -> {
                     int requestCount = requestCountMap.getOrDefault(userId, 0);
-                    return new UserQuota(userId, MAX_REQUESTS_PER_USER - requestCount);
+                    return new UserQuota(userId, maxRequestsPerUser - requestCount);
                 })
                 .toList();
     }

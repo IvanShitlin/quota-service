@@ -3,7 +3,7 @@ This is a simple Spring Boot application that provides a RESTful API for managin
 The application is built using Java 21. The application uses a MySQL and ElasticSearch  to store user information.
 ## Current Implementation
 
-The current implementation uses a `ConcurrentHashMap` to store the quota information for each userEntity. The key of the map is the userEntity ID and the value is the number of requests made by the userEntity. The maximum number of requests per userEntity is defined by the constant `MAX_REQUESTS_PER_USER`.
+The current implementation uses a `ConcurrentHashMap` to store the quota information for each user. The key of the map is the user ID and the value is the number of requests made by the user. The maximum number of requests per user is defined by the constant `MAX_REQUESTS_PER_USER` and sets in application.yml file.
 
 ## Usage
 To run the application, follow these steps:

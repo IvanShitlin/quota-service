@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: "jdbc:mysql://localhost:3306/quota-db"
+    url: "jdbc:mysql://localhost:55007/quota-db"
     username: user
     password: password
   elasticsearch:
@@ -17,3 +17,5 @@ spring:
   sql:
     init:
       platform: MYSQL
+
+max-requests-per-user: 5
